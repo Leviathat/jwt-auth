@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.phone_number
 
     @property
     def full_name(self):
@@ -61,8 +61,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         # Установка даты истечения токена через 7 дней
-        exp = datetime.now() + timedelta(seconds=5)
-
+        exp = datetime.now() + timedelta(days=7)
+        print(datetime.now() > exp)
         # Установка параметров заголовка токена
         headers = {'typ': 'jwt', 'alg': 'HS256'}
 

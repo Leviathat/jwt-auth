@@ -32,15 +32,16 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def _authenticate_credentials(self, request, token):
         try:
-            decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            decoded = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=['HS256'])
 
         except jwt.exceptions.DecodeError:
             raise AuthenticationFailed('Invalid token')
 
         expiration_time = datetime.utcfromtimestamp(decoded['exp'])
         current_time = datetime.utcnow()
-
-        if current_time < expiration_time:
+        print(expiration_time, current_time)
+        if current_time > expiration_time:
             raise AuthenticationFailed('Expired token')
 
         # МОГ БЫ СДЕЛАТЬ ТАК НАПИСАНО НИЖЕ, НО БЛЯТЬ PYJWT НЕ ХОЧЕТ СУКА КЛЮЧИ С ИСТЕКШИМ СРОКОМ ПРИЗАВАТЬ ЗА ИНВАЛИДОВ
