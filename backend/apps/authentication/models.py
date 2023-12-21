@@ -11,7 +11,8 @@ class UserManager(BaseUserManager):
     def create_user(self, phone_number, first_name, last_name, password=None, email=None):
         if phone_number is None:
             raise TypeError('Users must have a username.')
-        user = self.model(phone_number=phone_number, first_name=first_name, last_name=last_name, email=email)
+        user = self.model(phone_number=phone_number,
+                          first_name=first_name, last_name=last_name, email=email)
         user.set_password(password)
         user.save()
 
@@ -29,7 +30,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, null=True, default=None)
     phone_number = models.CharField(db_index=True, max_length=11, unique=True)
     first_name = models.CharField(max_length=40, blank=True)
@@ -72,7 +73,8 @@ class User(AbstractBaseUser):
         }
 
         # Генерация токена с помощью PyJWT
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256', headers=headers)
+        token = jwt.encode(payload, settings.SECRET_KEY,
+                           algorithm='HS256', headers=headers)
 
         # Возвращаем токен в виде строки
         return token
